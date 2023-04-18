@@ -6,6 +6,8 @@ class Consts {
   // int titleFontSize = 30;
 
   static Color mainPurple = const Color.fromARGB(255, 80, 0, 94);
+  static Color secondaryPurple = const Color.fromARGB(255, 88, 11, 102);
+
   static ThemeData taskCartTransparentTheme = ThemeData(
     canvasColor: Colors.transparent,
     shadowColor: Colors.transparent,

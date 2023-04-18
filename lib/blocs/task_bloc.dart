@@ -23,46 +23,64 @@ class EditTask extends TaskEvent {
   EditTask({required this.task, required this.taskIndex});
 }
 
+class SetFilter extends TaskEvent {
+  TaskStatus newFilter;
+  SetFilter({required this.newFilter});
+}
+
 //--------------------------------------------------------
 abstract class TaskState {
-  TaskState({required this.tasks});
+  TaskState({required this.tasks, required this.filterStatus});
   List<Task> tasks;
+  TaskStatus? filterStatus;
 }
 
 class TaskInit extends TaskState {
-  TaskInit() : super(tasks: []);
+  TaskInit() : super(tasks: [], filterStatus: TaskStatus.both);
 }
 
 class TaskUpdate extends TaskState {
-  TaskUpdate({required super.tasks});
+  TaskUpdate({required super.tasks, required super.filterStatus});
 }
 
 //--------------------------------------------------------
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
   List<Task> tasksTemp = [];
+  TaskStatus filterStatus = TaskStatus.both;
 
   TaskBloc() : super(TaskInit()) {
     on<AddTask>(addTask);
     on<ReplaceTask>(replaceTask);
     on<EditTask>(editTask);
+    on<SetFilter>(setFilter);
   }
 
   addTask(AddTask event, Emitter<TaskState> emit) {
     tasksTemp.add(event.newTask);
-    emit(TaskUpdate(tasks: tasksTemp));
-    print("tasksTemp");
+    emit(TaskUpdate(tasks: tasksTemp, filterStatus: filterStatus));
   }
 
   replaceTask(ReplaceTask event, Emitter<TaskState> emit) {
     Task removedTask = tasksTemp.removeAt(event.oldIndex);
     tasksTemp.insert(event.newIndex, removedTask);
-    emit(TaskUpdate(tasks: tasksTemp));
-    print("removedTask");
+    emit(TaskUpdate(tasks: tasksTemp, filterStatus: filterStatus));
   }
 
   editTask(EditTask event, Emitter<TaskState> emit) {
     tasksTemp[event.taskIndex] = event.task;
-    emit(TaskUpdate(tasks: tasksTemp));
-    print("editTask");
+    emit(TaskUpdate(tasks: tasksTemp, filterStatus: filterStatus));
   }
+
+  setFilter(SetFilter event, Emitter<TaskState> emit) {
+    filterStatus = event.newFilter;
+    if (filterStatus == TaskStatus.both) {
+      emit(TaskUpdate(tasks: tasksTemp, filterStatus: filterStatus));
+    } else {
+      emit(TaskUpdate(tasks: tasksTemp, filterStatus: filterStatus));
+    }
+  }
+
+  // setFilter(TaskStatus status) {
+  //   filterStatus = status;
+  // }
 }

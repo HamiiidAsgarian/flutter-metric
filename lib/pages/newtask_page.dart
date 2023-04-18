@@ -104,7 +104,6 @@ class EnterTaskPage extends StatelessWidget {
         child: CupertinoButton(
             color: Colors.red,
             onPressed: () {
-              print("title.text");
               BlocProvider.of<TaskBloc>(context).add(EditTask(
                   task: Task(
                       title: title.text,
@@ -115,7 +114,7 @@ class EnterTaskPage extends StatelessWidget {
               showSnackBar(
                   context, "New Task Has Been Added", SnackbarType.delete);
             },
-            child: Text("Edit")),
+            child: const Text("Edit")),
       );
     }
   }

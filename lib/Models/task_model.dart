@@ -19,4 +19,4 @@ class Task {
   }
 }
 
-enum TaskStatus { completed, onProgress }
+enum TaskStatus { completed, onProgress, both }

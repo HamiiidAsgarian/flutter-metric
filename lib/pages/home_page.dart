@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:web_metric/Models/task_model.dart';
 import 'package:web_metric/blocs/task_bloc.dart';
 import 'package:web_metric/const.dart';
 import 'package:web_metric/pages/newtask_page.dart';
+import 'package:web_metric/widgets/popup_menu.dart';
 import 'package:web_metric/widgets/task_card.dart';
 import '../widgets/custom_appbar.dart';
 
@@ -11,11 +13,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final ValueNotifier tasks = ValueNotifier([
-    //   '1111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222221',
-    //   't2',
-    //   't3'
-    // ]);
     return Scaffold(
       appBar: const CustomAppbar(title: 'Tasks'),
       body: SafeArea(
@@ -27,25 +24,46 @@ class HomePage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Filter", style: Consts.cardTextStyle),
-                const SizedBox(height: 5),
-                Text("V", style: Consts.cardTextStyle),
+                Row(
+                  children: [
+                    Text("Show Filter: ", style: Consts.cardTextStyle),
+                    BlocBuilder<TaskBloc, TaskState>(
+                      builder: (context, state) {
+                        return Text(state.filterStatus!.name.toString(),
+                            style: Consts.cardTextStyle);
+                      },
+                    ),
+                  ],
+                ),
+
+                ///sets the filter status in bloc to fetch the relevant list later in the list
+                CustomPopup(onSelected: (e) {
+                  if (e == TaskStatus.completed.name) {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(SetFilter(newFilter: TaskStatus.completed));
+                  } else if (e == TaskStatus.onProgress.name) {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(SetFilter(newFilter: TaskStatus.onProgress));
+                  } else {
+                    BlocProvider.of<TaskBloc>(context)
+                        .add(SetFilter(newFilter: TaskStatus.both));
+                  }
+                }),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Expanded(
-              child: Container(
-                // color: Colors.red,
-                child: Theme(
-                  data: Consts.taskCartTransparentTheme,
-                  child: BlocBuilder<TaskBloc, TaskState>(
-                    builder: (context, state) {
-                      return ReorderableListView(
-                          // buildDefaultDragHandles: false,
-                          children: List.generate(state.tasks.length, (index) {
+              child: Theme(
+                data: Consts.taskCartTransparentTheme,
+                child: BlocBuilder<TaskBloc, TaskState>(
+                  builder: (context, state) {
+                    return ReorderableListView(
+                        children: List.generate(state.tasks.length, (index) {
+                          if (state.tasks[index].status == state.filterStatus ||
+                              state.filterStatus == TaskStatus.both) {
                             return Container(
                               key: ValueKey('t$index'),
-                              margin: const EdgeInsets.only(bottom: 5),
+                              margin: const EdgeInsets.only(bottom: 10),
                               child: TaskCard(
                                   data: state.tasks[index],
                                   onTapStatus: () {
@@ -68,14 +86,17 @@ class HomePage extends StatelessWidget {
                                                     state.tasks[index])));
                                   }),
                             );
-                          }),
-                          onReorder: (int oldIndex, int newIndex) {
-                            if (newIndex > oldIndex) newIndex -= 1;
-                            BlocProvider.of<TaskBloc>(context).add(ReplaceTask(
-                                oldIndex: oldIndex, newIndex: newIndex));
-                          });
-                    },
-                  ),
+                          }
+                          return SizedBox(
+                            key: ValueKey('t$index'),
+                          );
+                        }),
+                        onReorder: (int oldIndex, int newIndex) {
+                          if (newIndex > oldIndex) newIndex -= 1;
+                          BlocProvider.of<TaskBloc>(context).add(ReplaceTask(
+                              oldIndex: oldIndex, newIndex: newIndex));
+                        });
+                  },
                 ),
               ),
             ),
