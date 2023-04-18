@@ -32,9 +32,10 @@ class HomePage extends StatelessWidget {
                 Text("V", style: Consts.cardTextStyle),
               ],
             ),
+            const SizedBox(height: 10),
             Expanded(
               child: Container(
-                color: Colors.red,
+                // color: Colors.red,
                 child: Theme(
                   data: Consts.taskCartTransparentTheme,
                   child: BlocBuilder<TaskBloc, TaskState>(
@@ -48,7 +49,6 @@ class HomePage extends StatelessWidget {
                               child: TaskCard(
                                   data: state.tasks[index],
                                   onTapStatus: () {
-                                    print("aaa111");
                                     BlocProvider.of<TaskBloc>(context).add(
                                         EditTask(
                                             task: state.tasks[index]
@@ -59,8 +59,13 @@ class HomePage extends StatelessWidget {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                NewTaskPage()));
+                                            builder: (context) => EnterTaskPage(
+                                                //NOTE should change
+                                                taskIndex: index,
+                                                pageType:
+                                                    EnterTaskPageType.editTask,
+                                                defultTaskData:
+                                                    state.tasks[index])));
                                   }),
                             );
                           }),
@@ -74,13 +79,15 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            FloatingActionButton(
-                child: const Text("New Task", textAlign: TextAlign.center),
+            FloatingActionButton.large(
+                backgroundColor: Consts.mainPurple,
+                child: Text("Add Task",
+                    textAlign: TextAlign.center, style: Consts.cardTextStyle),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const NewTaskPage()));
+                          builder: (context) => const EnterTaskPage()));
                 })
           ],
         ),
