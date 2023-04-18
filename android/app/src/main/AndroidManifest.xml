@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.web_metric">
    <application
-        android:label="web_metric"
+        android:label="MetricTask"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

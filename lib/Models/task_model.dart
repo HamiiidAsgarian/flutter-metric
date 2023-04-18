@@ -19,4 +19,5 @@ class Task {
   }
 }
 
+//NOTE There should be another enum just for filter status however because of the simplicity of the app it has been merged with task status
 enum TaskStatus { completed, onProgress, both }

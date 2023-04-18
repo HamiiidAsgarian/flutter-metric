@@ -53,7 +53,7 @@ class CustomTextInput extends StatelessWidget {
           validator: (v) {
             return validator!(v);
           },
-          cursorColor: Colors.green,
+          cursorColor: Consts.mainPurple,
           keyboardType: keyboardType,
           // inputFormatters: [
           //   MaskTextInputFormatter(mask: mask),
@@ -66,8 +66,8 @@ class CustomTextInput extends StatelessWidget {
               hintText: hint,
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
-                borderSide: const BorderSide(
-                  color: Colors.green,
+                borderSide: BorderSide(
+                  color: Consts.mainPurple,
                   width: 2.0,
                 ),
               ),

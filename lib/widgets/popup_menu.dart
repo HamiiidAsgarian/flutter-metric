@@ -7,36 +7,43 @@ class CustomPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String selected = TaskStatus.both.name;
+    ValueNotifier<String> selected = ValueNotifier(TaskStatus.both.name);
+
     return Container(
       decoration: BoxDecoration(border: Border.all(), shape: BoxShape.circle),
-      child: PopupMenuButton(
-        // padding: EdgeInsets.symmetric(horizontal: 5),
-        icon: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            // Text(selected, style: Consts.smallTextStyle),
-            Icon(Icons.filter_alt_outlined)
-          ],
+      child: ValueListenableBuilder(
+        valueListenable: selected,
+        builder: (context, value, child) => PopupMenuButton(
+          // padding: EdgeInsets.symmetric(horizontal: 5),
+          icon: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              // Text(selected, style: Consts.smallTextStyle),
+              Icon(Icons.filter_alt_outlined)
+            ],
+          ),
+          initialValue: selected.value,
+          onSelected: (value) {
+            selected.value = value;
+            onSelected(value);
+          },
+          itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(
+                value: TaskStatus.both.name,
+                child: const Text("No Filter"),
+              ),
+              PopupMenuItem(
+                value: TaskStatus.completed.name,
+                child: const Text("Completed"),
+              ),
+              PopupMenuItem(
+                value: TaskStatus.onProgress.name,
+                child: const Text("OnProgress"),
+              ),
+            ];
+          },
         ),
-        initialValue: selected,
-        onSelected: (value) => onSelected(value),
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(
-              value: TaskStatus.both.name,
-              child: const Text("No Filter"),
-            ),
-            PopupMenuItem(
-              value: TaskStatus.completed.name,
-              child: const Text("Completed"),
-            ),
-            PopupMenuItem(
-              value: TaskStatus.onProgress.name,
-              child: const Text("OnProgress"),
-            ),
-          ];
-        },
       ),
     );
   }

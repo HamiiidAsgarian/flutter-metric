@@ -5,7 +5,6 @@ import 'package:web_metric/Models/task_model.dart';
 import 'package:web_metric/blocs/task_bloc.dart';
 import 'package:web_metric/const.dart';
 import 'package:web_metric/widgets/custom_appbar.dart';
-
 import '../core/utils.dart';
 import '../widgets/custome_textinput.dart';
 
@@ -55,31 +54,15 @@ class EnterTaskPage extends StatelessWidget {
                 ),
               ),
             ),
-
             editOrInsertTaskButtonGeneratot(
                 context, taskTitleCntrlr, taskDescriptionCntrlr)
-            // FloatingActionButton(
-            //     backgroundColor: Consts.mainPurple,
-            //     child: Text("+",
-            //         style: Consts.titleTextStyle, textAlign: TextAlign.center),
-            //     onPressed: () {
-            //       BlocProvider.of<TaskBloc>(context).add(AddTask(
-            //           newTask: Task(
-            //               title: taskTitleCntrlr.text,
-            //               description: taskDescriptionCntrlr.text,
-            //               status: TaskStatus.onProgress)));
-
-            //   showSnackBar(
-            //       context, "New Task Has Been Added", SnackbarType.add);
-            //   taskTitleCntrlr.clear();
-            //   taskDescriptionCntrlr.clear();
-            // })
           ],
         ),
       )),
     );
   }
 
+  ///To avoid making different pages for Edit and Insert tasks this function generates reletive buttons
   editOrInsertTaskButtonGeneratot(BuildContext context,
       TextEditingController title, TextEditingController description) {
     if (pageType == EnterTaskPageType.newTask) {
@@ -112,7 +95,7 @@ class EnterTaskPage extends StatelessWidget {
                   taskIndex: taskIndex!));
 
               showSnackBar(
-                  context, "New Task Has Been Added", SnackbarType.delete);
+                  context, "Task Has Been Edited", SnackbarType.delete);
             },
             child: const Text("Edit")),
       );

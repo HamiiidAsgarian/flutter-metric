@@ -9,9 +9,9 @@ showSnackBar(BuildContext context, String message, SnackbarType type) {
       backgroundColor: () {
         switch (type) {
           case SnackbarType.add:
-            return Colors.greenAccent;
+            return Colors.blueAccent;
           case SnackbarType.delete:
-            return Colors.redAccent;
+            return Colors.amber;
           default:
             return Colors.black;
         }
