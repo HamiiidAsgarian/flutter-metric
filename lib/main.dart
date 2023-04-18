@@ -1,23 +1,27 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'pages/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: MyScrollBehavior(),
+        home: const HomePage());
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
+class MyScrollBehavior extends MaterialScrollBehavior {
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text("Hello world")));
-  }
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }
