@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'blocs/task_bloc.dart';
 import 'pages/home_page.dart';
 
 void main() {
@@ -11,10 +13,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        scrollBehavior: MyScrollBehavior(),
-        home: const HomePage());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TaskBloc(),
+        ),
+      ],
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          scrollBehavior: MyScrollBehavior(),
+          home: const HomePage()),
+    );
   }
 }
 

@@ -17,4 +17,6 @@ class Consts {
 
   static TextStyle cardTextStyle = const TextStyle(
       fontSize: 20, fontWeight: FontWeight.normal, fontFamily: "Poppins");
+  static TextStyle smallTextStyle = const TextStyle(
+      fontSize: 11, fontWeight: FontWeight.normal, fontFamily: "Poppins");
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:web_metric/blocs/task_bloc.dart';
 import 'package:web_metric/const.dart';
 import 'package:web_metric/pages/newtask_page.dart';
 import 'package:web_metric/widgets/task_card.dart';
@@ -9,11 +11,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ValueNotifier tasks = ValueNotifier([
-      '1111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222221',
-      't2',
-      't3'
-    ]);
+    // final ValueNotifier tasks = ValueNotifier([
+    //   '1111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222221',
+    //   't2',
+    //   't3'
+    // ]);
     return Scaffold(
       appBar: const CustomAppbar(title: 'Tasks'),
       body: SafeArea(
@@ -31,31 +33,47 @@ class HomePage extends StatelessWidget {
               ],
             ),
             Expanded(
-                child: Container(
-                    color: Colors.red,
-                    child: ValueListenableBuilder(
-                        valueListenable: tasks,
-                        builder: (context, value, child) {
-                          return Theme(
-                            data: Consts.taskCartTransparentTheme,
-                            child: ReorderableListView(
-                                // buildDefaultDragHandles: false,
-                                children: List.generate(
-                                    value.length,
-                                    (index) => Container(
-                                          key: ValueKey('t$index'),
-                                          margin:
-                                              const EdgeInsets.only(bottom: 5),
-                                          child: TaskCard(data: value[index]),
-                                        )),
-                                onReorder: (int oldIndex, int newIndex) {
-                                  if (newIndex > oldIndex) newIndex -= 1;
-                                  final String item = value.removeAt(oldIndex);
-                                  tasks.value = List.from(tasks.value)
-                                    ..insert(newIndex, item);
-                                }),
-                          );
-                        }))),
+              child: Container(
+                color: Colors.red,
+                child: Theme(
+                  data: Consts.taskCartTransparentTheme,
+                  child: BlocBuilder<TaskBloc, TaskState>(
+                    builder: (context, state) {
+                      return ReorderableListView(
+                          // buildDefaultDragHandles: false,
+                          children: List.generate(state.tasks.length, (index) {
+                            return Container(
+                              key: ValueKey('t$index'),
+                              margin: const EdgeInsets.only(bottom: 5),
+                              child: TaskCard(
+                                  data: state.tasks[index],
+                                  onTapStatus: () {
+                                    print("aaa111");
+                                    BlocProvider.of<TaskBloc>(context).add(
+                                        EditTask(
+                                            task: state.tasks[index]
+                                                .changeStatus(),
+                                            taskIndex: index));
+                                  },
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                NewTaskPage()));
+                                  }),
+                            );
+                          }),
+                          onReorder: (int oldIndex, int newIndex) {
+                            if (newIndex > oldIndex) newIndex -= 1;
+                            BlocProvider.of<TaskBloc>(context).add(ReplaceTask(
+                                oldIndex: oldIndex, newIndex: newIndex));
+                          });
+                    },
+                  ),
+                ),
+              ),
+            ),
             FloatingActionButton(
                 child: const Text("New Task", textAlign: TextAlign.center),
                 onPressed: () {
