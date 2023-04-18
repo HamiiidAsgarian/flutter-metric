@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/widgets.dart';
+import 'package:web_metric/const.dart';
 
 class TaskCard extends StatelessWidget {
   final String data;
@@ -10,10 +11,12 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25), color: Colors.amber),
+      // height: 100,
       width: double.infinity,
-      color: Colors.amber,
-      child: Center(child: Text(data)),
+      child: Center(child: Text(data, style: Consts.cardTextStyle)),
     );
   }
 }
